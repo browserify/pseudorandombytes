@@ -1,6 +1,6 @@
 var PRNG = require('./prng');
-
-var prng = new PRNG();
+var randomBytes = require('randombytes');
+var prng = new PRNG(randomBytes(64));
 
 module.exports = psudoRandomBytes;
 function psudoRandomBytes(len) {

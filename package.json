@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "chacha": "^1.1.0",
+    "create-hash": "^1.1.0",
     "randombytes": "^2.0.0"
   },
   "devDependencies": {

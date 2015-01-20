@@ -13,13 +13,13 @@ var sofar = 0;
 //     buf[i] = Math.random() * 8*8*4;
 //   }
 stream._read = function (num) {
-  // var buf = new Buffer(num);
-  // var i = -1;
-  // while (++i < num) {
-  //   buf[i] = Math.random() * 8*8*4;
-  // }
-  // this.push(buf);
-  this.push(prng(num));
+  var buf = new Buffer(num);
+  var i = -1;
+  while (++i < num) {
+    buf[i] = Math.random() * 8*8*4;
+  }
+  this.push(buf);
+  //this.push(prng(num));
   sofar += num;
   if (sofar > bytes) {
     this.push(null);
