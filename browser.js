@@ -4,5 +4,5 @@ var prng = new PRNG(randomBytes(64));
 
 module.exports = psudoRandomBytes;
 function psudoRandomBytes(len) {
-  return prng.getBytes(len);
+  return prng.next(len).value;
 }

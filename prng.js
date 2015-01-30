@@ -1,34 +1,77 @@
 var Chacha = require('chacha/chacha20');
 
 var createHash = require('create-hash');
+var createHmac = require('create-hmac');
 module.exports = PRNG;
+var ZERO_KEY = new Buffer(32);
+ZERO_KEY.fill(0);
+
+var ZERO_NONCE = new Buffer(12);
+ZERO_NONCE.fill(0);
+
+
 function PRNG(seed) {
   this.chacha = void 0;
-  this.nextBytes = void 0;
+  this.pool = createHash('sha512');
+  this.seedNum = 0;
+  this._read = 0;
+  this.chacha = new Chacha(ZERO_KEY, ZERO_NONCE);
   if (seed) {
-    this.seed(seed);
+    this.reseed(seed);
   }
 }
-PRNG.prototype.seed = function (bytes) {
-  bytes = createHash('sha384').update(bytes).digest();
+PRNG.prototype.addEntropy = function (bytes) {
+  this.pool.update(bytes);
+  return this;
+};
+PRNG.prototype.reseed = function (data) {
+  if (data) {
+    this.addEntropy(data);
+  }
+  var seedNum = ++this.seedNum;
+  var entropy = createHmac('sha384', this.chacha.getBytes(64));
+
+  entropy.update(encodeSourceMetaData(seedNum));
+  entropy.update(this.pool.digest());
+
+  this.pool = createHash('sha512');
+
+  var bytes = entropy.digest();
+
   var key = bytes.slice(0, 32);
   var iv = bytes.slice(32, 44);
+
   this.chacha = new Chacha(key, iv);
-  this.nextBytes = this.chacha.getBytes(44);
+
+  return this;
 };
 
-PRNG.prototype.reseed = function () {
-  this.seed(this.nextBytes);
-};
+function encodeSourceMetaData(num) {
+  var data = new Buffer(4);
+  data.writeUInt32BE(num, 0);
+  return data;
+}
 
 PRNG.prototype.getBytes = function (len) {
-  try {
-    return this.chacha.getBytes(len);
-  } catch(e) {
-    if (e.message === 'counter is exausted') {
-      this.reseed();
-      return this.chacha.getBytes(len);
-    }
-    throw e;
+  if (!this.chacha) {
+    throw new Error('must be seeded');
   }
+  return this.chacha.getBytes(len);
+};
+
+PRNG.prototype.next = function (len) {
+  if (typeof len === 'number') {
+    len = 8;
+  }
+  if (this._read > 1024) {
+    this.reseed();
+  }
+  var out = this.getBytes(len);
+  this.addEntropy(this.getBytes(len));
+  this._read += len;
+
+  return {
+    value: out,
+    done: false
+  };
 };
