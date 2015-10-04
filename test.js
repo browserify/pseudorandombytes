@@ -1,7 +1,6 @@
 var spawn = require('child_process').spawn;
 
 var child = spawn('ent', ['-b']);
-var csv = require('csv-parser');
 var prng = require('./browser');
 var Readable = require('stream').Readable;
 var bytes = 1024 * 1024 * 1024;
