@@ -10,7 +10,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "chacha": "^1.1.0",
+    "create-hash": "^1.1.2",
+    "create-hmac": "^1.1.4",
     "randombytes": "^2.0.0"
   },
   "devDependencies": {

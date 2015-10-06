@@ -1,25 +1,21 @@
-var Chacha = require('chacha/chacha20');
-var randomBytes = require('randombytes');
-var maxInt = Math.pow(2, 32);
+var ChaCha = require('./chacha');
+var createHmac = require('create-hmac')
 module.exports = PRNG;
-function PRNG() {
-  this.bytes = void 0;
-  this.chacha = void 0;
-  this.seed();
+function PRNG(seed, _maxInt) {
+  this._seed = seed;
+  this.chacha = new ChaCha(this._seed());
 }
 PRNG.prototype.seed = function () {
-  this.chacha = new Chacha(randomBytes(32), randomBytes(12));
-  this.bytes = 0;
+  var blendedSeed = createHmac('sha512', this.chacha.getBytes(64))
+    .update(this._seed())
+    .digest();
+  this.chacha = new ChaCha(blendedSeed);
 };
-
-PRNG.prototype.checkReseed = function (len) {
-  if ((this.bytes + len) >= maxInt) {
-    this.seed();
-  }
+PRNG.prototype._seed = function () {
+  throw new Error('you must impliment me');
 };
 
 PRNG.prototype.getBytes = function (len) {
-  this.checkReseed();
-  this.bytes += len;
+  this.seed(len);
   return this.chacha.getBytes(len);
 };
