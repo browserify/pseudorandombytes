@@ -12,5 +12,4 @@ var pseudoRandomBytes = require('pseudorandomBbytes');
 var bytes = pseudoRandomBytes(34);
 ```
 
-
-To be clear there is no legitimate reason for you ever to want to use this.
+# To be clear there is no legitimate reason for you ever to want to use this.
