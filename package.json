@@ -1,24 +1,31 @@
 {
   "name": "pseudorandombytes",
   "version": "2.0.0",
-  "description": "",
-  "main": "index.js",
-  "browser": "browser.js",
-  "scripts": {
-    "test": "node test.js"
-  },
-  "author": "",
+  "description": "node style pseudorandombytes for the browser",
+  "homepage": "https://github.com/crypto-browserify/pseudorandombytes",
   "license": "MIT",
-  "dependencies": {
-    "create-hash": "^1.1.2",
-    "create-hmac": "^1.1.4",
-    "randombytes": "^2.0.0"
-  },
-  "devDependencies": {
-    "through2": "^0.6.3"
-  },
+  "files": [
+    "browser.js",
+    "index.js"
+  ],
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:crypto-browserify/pseudorandombytes.git"
-  }
+    "url": "https://github.com/crypto-browserify/pseudorandombytes.git"
+  },
+  "scripts": {
+    "coverage": "nyc tape test/*.js",
+    "lint": "standard",
+    "test": "tape test/*.js"
+  },
+  "dependencies": {
+    "randombytes": "^2.0.0",
+    "xorshift.js": "^1.0.3"
+  },
+  "devDependencies": {
+    "nyc": "^6.4.0",
+    "standard": "^6.0.8",
+    "tape": "^4.5.1"
+  },
+  "browser": "browser.js"
 }

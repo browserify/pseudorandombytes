@@ -1,1 +1,2 @@
-module.exports = require('crypto').pseudoRandomBytes;
+'use strict'
+module.exports = require('crypto').pseudoRandomBytes
