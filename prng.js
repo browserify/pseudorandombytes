@@ -11,8 +11,9 @@ PRNG.prototype.seed = function () {
     .digest();
   this.chacha = new ChaCha(blendedSeed);
 };
+
 PRNG.prototype._seed = function () {
-  throw new Error('you must impliment me');
+  throw new Error('Not implemented');
 };
 
 PRNG.prototype.getBytes = function (len) {
